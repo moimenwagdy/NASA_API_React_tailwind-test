@@ -4,26 +4,13 @@ import ContentContainer from "./ContentContainer";
 import ImageView from "./imageView";
 import VideoView from "./ViedoView";
 import { apiFetch } from "../fethData";
+import { useFetch } from "../hooks/useFetch";
 let content;
 export default function Container() {
-  let [api, setApi] = useState();
-  let [isError, setIsError] = useState("");
   let [fullScreen, setFullScreen] = useState(false);
-
-  useEffect(() => {
-    async function getData() {
-      try {
-        let fetchLink = await apiFetch();
-        let fetchedData = await fetchLink.json();
-
-        setApi(fetchedData);
-      } catch (error) {
-        setIsError(error.message);
-      }
-    }
-    getData();
-  }, []);
-
+  //custom hook
+  let { api, isError, isLoading } = useFetch(apiFetch);
+  //
   function openImg() {
     setFullScreen(true);
   }
@@ -56,8 +43,15 @@ export default function Container() {
       ) : (
         <p className="text-white text-center text-xl">{isError}</p>
       )}
+      {isLoading ? (
+        <p className="text-4xl text-center mt-12 text-white">LOADING...</p>
+      ) : (
+        ""
+      )}
       <p className="text-center text-white/70 my-2">{api && api.title}</p>
-      <p className="text-center text-white/70 mt-[-14px] mb-2">{api && api.date}</p>
+      <p className="text-center text-white/70 mt-[-14px] mb-2">
+        {api && api.date}
+      </p>
       {api && api.explanation && (
         <div className="bg-slate-100/90 rounded-xl w-3/4 m-auto">
           <p className="p-2 space-x-2">
