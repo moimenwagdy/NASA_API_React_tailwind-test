@@ -8,5 +8,4 @@ export async function apiFetch() {
   } else {
     return fetchedData;
   }
-  yy;
 }
